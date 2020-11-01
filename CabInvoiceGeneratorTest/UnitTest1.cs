@@ -63,5 +63,18 @@ namespace CabInvoiceGeneratorTest
 
             Assert.AreEqual(CabInvoiceException.Type.NULL_RIDES, exception.type);
         }
+        [Test]
+        public void GivenListOfRides_Should_Return_InvoiceData()
+        {
+            rideList = new List<Ride> { new Ride(5, 20), new Ride(3, 15), new Ride(2, 10) };
+            double expectedFare = 145;
+            int expectedRides = 3;
+            double expectedAverage = expectedFare / expectedRides;
+
+            InvoiceData data = invoiceGenerator.GetInvoiceSummary(rideList);
+
+            Assert.IsTrue(data.noOfRides == expectedRides && data.totalFare == expectedFare && data.averageFare ==expectedAverage);
+        }
+
     }
 }

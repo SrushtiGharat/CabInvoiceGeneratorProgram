@@ -9,8 +9,10 @@ namespace CabInvoiceGeneratorProgram
         readonly int COST_PER_KM = 10;
         readonly int COST_PER_MIN = 1;
         readonly int MIN_FARE = 5;
-
         double totalFare;
+
+        InvoiceSummary invoiceSummary = new InvoiceSummary();
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -54,6 +56,17 @@ namespace CabInvoiceGeneratorProgram
                 this.totalFare = totalFare + CalculateFare(ride);
             }
             return this.totalFare;
+        }
+        /// <summary>
+        /// Get Enhanced Invoice
+        /// </summary>
+        /// <param name="rideList"></param>
+        /// <returns></returns>
+        public InvoiceData GetInvoiceSummary(List<Ride> rideList)
+        {
+            double fare = CalculateFareForMultipleRides(rideList);
+            InvoiceData data = invoiceSummary.GetInvoice(rideList.Count, totalFare);
+            return data;
         }
     }
 }
