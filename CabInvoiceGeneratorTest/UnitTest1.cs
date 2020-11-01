@@ -73,7 +73,37 @@ namespace CabInvoiceGeneratorTest
 
             InvoiceData data = invoiceGenerator.GetInvoiceSummary(rideList);
 
-            Assert.IsTrue(data.noOfRides == expectedRides && data.totalFare == expectedFare && data.averageFare ==expectedAverage);
+            Assert.IsTrue(data.noOfRides == expectedRides && data.totalFare == expectedFare && data.averageFare == expectedAverage);
+        }
+        [Test]
+        public void GivenNullRides_WhenAddingToDictionary_Should_Return_CabInvoiceException()
+        {
+            rideList = new List<Ride> { new Ride(5, 20), null, new Ride(2, 10) };
+
+            var exception = Assert.Throws<CabInvoiceException>(() => invoiceGenerator.AddRides(1, rideList));
+
+            Assert.AreEqual(CabInvoiceException.Type.NULL_RIDES, exception.type);
+
+        }
+        [Test]
+        public void GivenUserId_WhenPresent_Should_Return_CabInvoiceSummary()
+        {
+            rideList = new List<Ride> { new Ride(5, 20), new Ride(3, 15), new Ride(2, 10) };
+            double expectedFare = 145;
+            int expectedRides = 3;
+            double expectedAverage = expectedFare / expectedRides;
+
+            invoiceGenerator.AddRides(1, rideList);
+            InvoiceData data = invoiceGenerator.GetUserInvoice(1);
+
+            Assert.IsTrue(data.noOfRides == expectedRides && data.totalFare == expectedFare && data.averageFare == expectedAverage);
+        }
+        [Test]
+        public void GivenUserId_WhenAbsent_Should_Return_CabInvoiceException()
+        {
+            var exception = Assert.Throws<CabInvoiceException>(() => invoiceGenerator.GetUserInvoice(1));
+
+            Assert.AreEqual(CabInvoiceException.Type.INVALID_USER_ID, exception.type);
         }
 
     }

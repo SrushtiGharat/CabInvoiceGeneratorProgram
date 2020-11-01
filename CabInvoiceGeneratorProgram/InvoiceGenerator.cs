@@ -12,7 +12,7 @@ namespace CabInvoiceGeneratorProgram
         double totalFare;
 
         InvoiceSummary invoiceSummary = new InvoiceSummary();
-
+        RideRepository rideRepository = new RideRepository();
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -66,6 +66,27 @@ namespace CabInvoiceGeneratorProgram
         {
             double fare = CalculateFareForMultipleRides(rideList);
             InvoiceData data = invoiceSummary.GetInvoice(rideList.Count, totalFare);
+            return data;
+        }
+
+        /// <summary>
+        /// Add rides to dictionary according to user id
+        /// </summary>
+        /// <param name="userId"></param>
+        public void AddRides(int userId, List<Ride> rideList)
+        {
+            rideRepository.Add(userId, rideList);
+        }
+
+        /// <summary>
+        /// Given user id get invoice
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public InvoiceData GetUserInvoice(int userId)
+        {
+            List<Ride> rideList = rideRepository.GetRides(userId);
+            InvoiceData data = GetInvoiceSummary(rideList);
             return data;
         }
     }
