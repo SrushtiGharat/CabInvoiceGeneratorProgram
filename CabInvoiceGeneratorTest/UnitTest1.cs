@@ -14,14 +14,26 @@ namespace CabInvoiceGeneratorTest
             invoiceGenerator = new InvoiceGenerator();
         }
         [Test]
-        public void GivenDistanceAndTime_Should_Return_Fare()
+        public void GivenDistanceAndTimeForNormalRide_Should_Return_Fare()
         {
             double distance = 5; //in km
             int time = 20;   //in minutes
+            invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
 
             double fare = invoiceGenerator.CalculateFare(new Ride(distance, time));
 
             Assert.AreEqual(70, fare);
+        }
+        [Test]
+        public void GivenDistanceAndTimeForPremiumRide_Should_Return_Fare()
+        {
+            double distance = 5; //in km
+            int time = 20;   //in minutes
+            invoiceGenerator = new InvoiceGenerator(RideType.PREMIUM);
+
+            double fare = invoiceGenerator.CalculateFare(new Ride(distance, time));
+
+            Assert.AreEqual(115, fare);
         }
 
         [Test]
@@ -29,6 +41,7 @@ namespace CabInvoiceGeneratorTest
         {
             double distance = -5; //in km
             int time = 20;   //in minute
+            invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
 
             var exception = Assert.Throws<CabInvoiceException>(() => invoiceGenerator.CalculateFare(new Ride(distance, time)));
 
@@ -39,6 +52,7 @@ namespace CabInvoiceGeneratorTest
         {
             double distance = 5; //in km
             int time = -20;   //in minute
+            invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
 
             var exception = Assert.Throws<CabInvoiceException>(() => invoiceGenerator.CalculateFare(new Ride(distance, time)));
 
@@ -48,6 +62,7 @@ namespace CabInvoiceGeneratorTest
         public void GivenListOfRides_Should_Return_TotalFare()
         {
             rideList = new List<Ride> { new Ride(5, 20), new Ride(3, 15), new Ride(2, 10) };
+            invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
 
             double fare = invoiceGenerator.CalculateFareForMultipleRides(rideList);
 
@@ -58,6 +73,7 @@ namespace CabInvoiceGeneratorTest
         public void GivenNullRides_Should_Return_CabInvoiceException()
         {
             rideList = new List<Ride> { new Ride(5, 20), null, new Ride(2, 10) };
+            invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
 
             var exception = Assert.Throws<CabInvoiceException>(() => invoiceGenerator.CalculateFareForMultipleRides(rideList));
 
@@ -70,6 +86,7 @@ namespace CabInvoiceGeneratorTest
             double expectedFare = 145;
             int expectedRides = 3;
             double expectedAverage = expectedFare / expectedRides;
+            invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
 
             InvoiceData data = invoiceGenerator.GetInvoiceSummary(rideList);
 
@@ -79,6 +96,7 @@ namespace CabInvoiceGeneratorTest
         public void GivenNullRides_WhenAddingToDictionary_Should_Return_CabInvoiceException()
         {
             rideList = new List<Ride> { new Ride(5, 20), null, new Ride(2, 10) };
+            invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
 
             var exception = Assert.Throws<CabInvoiceException>(() => invoiceGenerator.AddRides(1, rideList));
 
@@ -92,6 +110,7 @@ namespace CabInvoiceGeneratorTest
             double expectedFare = 145;
             int expectedRides = 3;
             double expectedAverage = expectedFare / expectedRides;
+            invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
 
             invoiceGenerator.AddRides(1, rideList);
             InvoiceData data = invoiceGenerator.GetUserInvoice(1);
@@ -101,6 +120,8 @@ namespace CabInvoiceGeneratorTest
         [Test]
         public void GivenUserId_WhenAbsent_Should_Return_CabInvoiceException()
         {
+            invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
+
             var exception = Assert.Throws<CabInvoiceException>(() => invoiceGenerator.GetUserInvoice(1));
 
             Assert.AreEqual(CabInvoiceException.Type.INVALID_USER_ID, exception.type);

@@ -6,18 +6,47 @@ namespace CabInvoiceGeneratorProgram
 {
     public class InvoiceGenerator
     {
-        readonly int COST_PER_KM = 10;
-        readonly int COST_PER_MIN = 1;
-        readonly int MIN_FARE = 5;
+        readonly int COST_PER_KM;
+        readonly int COST_PER_MIN;
+        readonly int MIN_FARE;
         double totalFare;
+        RideType rideType;
 
         InvoiceSummary invoiceSummary = new InvoiceSummary();
         RideRepository rideRepository = new RideRepository();
+        
         /// <summary>
         /// Default constructor
         /// </summary>
         public InvoiceGenerator()
         {
+        }
+
+        /// <summary>
+        /// Parameterised constructor
+        /// </summary>
+        /// <param name="rideList"></param>
+        /// <param name="rideType"></param>
+        public InvoiceGenerator(RideType rideType)
+        {
+            this.rideType = rideType;
+
+            if (rideType.Equals(RideType.NORMAL))
+            {
+                this.COST_PER_KM = 10;
+                this.COST_PER_MIN = 1;
+                this.MIN_FARE = 5;
+            }
+            else if (rideType.Equals(RideType.PREMIUM))
+            {
+                this.COST_PER_KM = 15;
+                this.COST_PER_MIN = 2;
+                this.MIN_FARE = 20;
+            }
+            else
+            {
+                throw new CabInvoiceException(CabInvoiceException.Type.INVALID_RIDE_TYPE, "Ride type is Invalid");
+            }
         }
 
         /// <summary>
