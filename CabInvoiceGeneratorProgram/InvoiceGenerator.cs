@@ -10,6 +10,7 @@ namespace CabInvoiceGeneratorProgram
         readonly int COST_PER_MIN = 1;
         readonly int MIN_FARE = 5;
 
+        double totalFare;
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -39,6 +40,20 @@ namespace CabInvoiceGeneratorProgram
 
             double fare = (ride.distance * COST_PER_KM) + (ride.time * COST_PER_MIN);
             return Math.Max(fare, MIN_FARE);
+        }
+        /// <summary>
+        /// Calculate Fare For Multiple Rides
+        /// </summary>
+        /// <param name="rideList"></param>
+        /// <returns></returns>
+        public double CalculateFareForMultipleRides(List<Ride> rideList)
+        {
+            this.totalFare = 0;
+            foreach (var ride in rideList)
+            {
+                this.totalFare = totalFare + CalculateFare(ride);
+            }
+            return this.totalFare;
         }
     }
 }

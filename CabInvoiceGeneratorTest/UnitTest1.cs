@@ -1,10 +1,12 @@
 using NUnit.Framework;
 using CabInvoiceGeneratorProgram;
+using System.Collections.Generic;
 namespace CabInvoiceGeneratorTest
 {
     public class Tests
     {
         InvoiceGenerator invoiceGenerator;
+        List<Ride> rideList;
 
         [SetUp]
         public void Setup()
@@ -42,6 +44,24 @@ namespace CabInvoiceGeneratorTest
 
             Assert.AreEqual(CabInvoiceException.Type.INVALID_TIME, exception.type);
         }
+        [Test]
+        public void GivenListOfRides_Should_Return_TotalFare()
+        {
+            rideList = new List<Ride> { new Ride(5, 20), new Ride(3, 15), new Ride(2, 10) };
 
+            double fare = invoiceGenerator.CalculateFareForMultipleRides(rideList);
+
+            Assert.AreEqual(145, fare);
+
+        }
+        [Test]
+        public void GivenNullRides_Should_Return_CabInvoiceException()
+        {
+            rideList = new List<Ride> { new Ride(5, 20), null, new Ride(2, 10) };
+
+            var exception = Assert.Throws<CabInvoiceException>(() => invoiceGenerator.CalculateFareForMultipleRides(rideList));
+
+            Assert.AreEqual(CabInvoiceException.Type.NULL_RIDES, exception.type);
+        }
     }
 }
