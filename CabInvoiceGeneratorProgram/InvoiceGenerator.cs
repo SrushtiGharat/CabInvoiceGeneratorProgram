@@ -25,7 +25,6 @@ namespace CabInvoiceGeneratorProgram
         /// <summary>
         /// Parameterised constructor
         /// </summary>
-        /// <param name="rideList"></param>
         /// <param name="rideType"></param>
         public InvoiceGenerator(RideType rideType)
         {
@@ -102,6 +101,7 @@ namespace CabInvoiceGeneratorProgram
         /// Add rides to dictionary according to user id
         /// </summary>
         /// <param name="userId"></param>
+        /// <param name="rideList"></param>
         public void AddRides(int userId, List<Ride> rideList)
         {
             rideRepository.Add(userId, rideList);
